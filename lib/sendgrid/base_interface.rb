@@ -37,7 +37,7 @@ class BaseInterface
     @client = SendGrid::Client.new(host: "#{@host}/#{@version}",
                                    request_headers: @request_headers,
                                    http_options: @http_options,
-                                   proxy_optioons: @proxy_options)
+                                   proxy_options: @proxy_options)
   end
 
   # Client libraries contain setters for specifying region/edge.
