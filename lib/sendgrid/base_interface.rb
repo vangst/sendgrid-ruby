@@ -4,7 +4,7 @@ require_relative 'version'
 # Initialize the HTTP client
 class BaseInterface
   attr_accessor :client
-  attr_reader :request_headers, :host, :version, :impersonate_subuser, :http_options
+  attr_reader :request_headers, :host, :version, :impersonate_subuser, :http_options, :proxy_options
 
   # * *Args* :
   #   - +auth+ -> authorization header value
@@ -16,7 +16,7 @@ class BaseInterface
   #                              in the "On-Behalf-Of" header
   #   - +http_options+ -> http options that you want to be globally applied to each request
   #
-  def initialize(auth:, host:, request_headers: nil, version: nil, impersonate_subuser: nil, http_options: {})
+  def initialize(auth:, host:, request_headers: nil, version: nil, impersonate_subuser: nil, http_options: {}, proxy_options: {})
     @auth = auth
     @host = host
     @version = version || 'v3'
@@ -33,9 +33,11 @@ class BaseInterface
 
     @request_headers = @request_headers.merge(request_headers) if request_headers
     @http_options = http_options
+    @proxy_options = proxy_options
     @client = SendGrid::Client.new(host: "#{@host}/#{@version}",
                                    request_headers: @request_headers,
-                                   http_options: @http_options)
+                                   http_options: @http_options,
+                                   proxy_optioons: @proxy_options)
   end
 
   # Client libraries contain setters for specifying region/edge.
@@ -52,6 +54,7 @@ class BaseInterface
     @host = region_host_dict[region]
     @client = SendGrid::Client.new(host: "#{@host}/#{@version}",
                                    request_headers: @request_headers,
-                                   http_options: @http_options)
+                                   http_options: @http_options,
+                                   proxy_options: @proxy_options)
   end
 end
